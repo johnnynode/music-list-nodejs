@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div><a href="/add">添加歌曲</a></div>
+  <table>
+    <thead>
+      <th>编号</th>
+      <th>头衔</th>
+      <th>歌手</th>
+      <th>高音质</th>
+      <th>操作</th>
+    </thead>
+    <% musicList.forEach(function(item){ %>
+    <tr>
+      <td><%= item.id %></td>
+      <td><%= item.title %></td>
+      <td><%= item.singer %></td>
+      <td>
+        <% if(item.isHightRate){ %>
+          <input type="radio" checked>是
+          <input type="radio">否
+        <% }else{ %>
+        <input type="radio">是
+        <input type="radio" checked>否
+        <% } %>
+      </td>
+      <td>
+        <a href="/edit/<%= item.id %>">编辑</a>
+        <a href="javascript:remove('/remove/<%= item.id %>')">删除</a>
+      </td>
+    </tr>
+    <% });%>
+  </table>
+</body>
+</html>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script>
+  function remove(url){
+    if(!confirm('确定删除？')){
+        return;
+    }
+    $.ajax({
+      url:url,
+      type:'GET',
+      success:function(data){
+        var jsonObj = JSON.parse(data);
+        console.log(data);
+        console.log(jsonObj);
+        if(jsonObj.code == 1){
+          location.reload('/');
+        }else if(jsonObj.code == 0){
+          alert(jsonObj.msg);
+        }
+      }
+    })
+  }
+</script>
